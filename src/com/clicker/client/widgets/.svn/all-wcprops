@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/Android-Project/!svn/ver/142/ClickerClient/src/com/clicker/client/widgets
+END
+QuestionComboBox.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/Android-Project/!svn/ver/142/ClickerClient/src/com/clicker/client/widgets/QuestionComboBox.java
+END
+QuestionJeoButton.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/Android-Project/!svn/ver/142/ClickerClient/src/com/clicker/client/widgets/QuestionJeoButton.java
+END
+QuestionButton.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/Android-Project/!svn/ver/148/ClickerClient/src/com/clicker/client/widgets/QuestionButton.java
+END
+QuestionStars.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/Android-Project/!svn/ver/142/ClickerClient/src/com/clicker/client/widgets/QuestionStars.java
+END
+QuestionTextBox.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/Android-Project/!svn/ver/148/ClickerClient/src/com/clicker/client/widgets/QuestionTextBox.java
+END
+QuestionToggleButton.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/Android-Project/!svn/ver/142/ClickerClient/src/com/clicker/client/widgets/QuestionToggleButton.java
+END
+QuestionTextView.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/Android-Project/!svn/ver/142/ClickerClient/src/com/clicker/client/widgets/QuestionTextView.java
+END
+QuestionSlider.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/Android-Project/!svn/ver/142/ClickerClient/src/com/clicker/client/widgets/QuestionSlider.java
+END
+QuestionWidgetInterface.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/Android-Project/!svn/ver/142/ClickerClient/src/com/clicker/client/widgets/QuestionWidgetInterface.java
+END

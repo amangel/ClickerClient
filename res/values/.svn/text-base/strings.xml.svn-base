@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Hello World!</string>
+	<string name="app_name">ClickerClient</string>
+	<string name="question1">A</string>
+	<string name="question2">B</string>
+	<string name="question3">C</string>
+	<string name="question4">D</string>
+	<string name="question_title">Questions!</string>
+	<string name="question_button_text">Question</string>
+	<string name="jeopardy_button_text">Hit me!</string>
+	<string name="first_name_edittext_preference">Name</string>
+	<string name="first_name_summary_edittext_preference">Your name</string>
+	<string name="first_name_dialog_title_edittext_preference">Enter your name</string>
+	<string name="name_preference_category">Your Name</string>
+	<string name="name_settings_title">ClickerClient Preferences</string>
+	<string name="name_settings_label">Settings</string>
+	<string name="name_settings_shortcut">s</string>
+	<string name="dialog_title">Question:</string>
+	<string name="connections_label">Saved Connections</string>
+	<string name="connections_shortcut">c</string>
+	<string name="connection_preference_category">Connections</string>
+	<string name="mc_activity_label">Choose an answer from below</string>
+	<string name="clickpad_activity_label">Mouse/Keyboard control</string>
+	<string name="slider_activity_label">Slider Activity</string>
+	<string name="checkbox_activity_label">Checkbox Activity</string>
+	<string name="submit_menu_label">Submit</string>
+	<string name="submit_menu_shortcut">s</string>
+	<string name="push_server_waiting_text_label">Waiting for questions...</string>
+	<string name="connection_dialog_text">Select how you wish to connect:</string>
+	<string name="connection_dialog_qrbutton_text">Scan QR code</string>
+	<string name="connection_dialog_manual_connect_button_text">Manually configure the connection</string>
+	<string name="cancel">Cancel</string>
+	<string name="manual_connection_ip_string">IP Address</string>
+	<string name="manual_connection_port">Port</string>
+	<string name="manual_connection_teachername">Teacher Name</string>
+	<string name="manual_connection_groupname">Group name</string>
+	<string name="manual_connection_leave_group_blank_label">Leave the group field blank to not join a group</string>
+	<string name="connect">Connect</string>
+</resources>

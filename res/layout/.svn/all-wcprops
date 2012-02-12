@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/Android-Project/!svn/ver/97/ClickerClient/res/layout
+END
+question_button.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/Android-Project/!svn/ver/97/ClickerClient/res/layout/question_button.xml
+END
+checkbox_layout.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/Android-Project/!svn/ver/97/ClickerClient/res/layout/checkbox_layout.xml
+END
+main.xml
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/Android-Project/!svn/ver/157/ClickerClient/res/layout/main.xml
+END
+question_layout.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/Android-Project/!svn/ver/106/ClickerClient/res/layout/question_layout.xml
+END
+connect_dialog_layout.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/Android-Project/!svn/ver/157/ClickerClient/res/layout/connect_dialog_layout.xml
+END
+click_pad_layout.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/Android-Project/!svn/ver/97/ClickerClient/res/layout/click_pad_layout.xml
+END
+push_server_waiting_screen.xml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/Android-Project/!svn/ver/108/ClickerClient/res/layout/push_server_waiting_screen.xml
+END
+manual_connection_dialog_layout.xml
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/Android-Project/!svn/ver/153/ClickerClient/res/layout/manual_connection_dialog_layout.xml
+END
+button.xml
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/Android-Project/!svn/ver/97/ClickerClient/res/layout/button.xml
+END
+slider_layout.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/Android-Project/!svn/ver/97/ClickerClient/res/layout/slider_layout.xml
+END

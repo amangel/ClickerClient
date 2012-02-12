@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/Android-Project/!svn/ver/97/ClickerClient/src/com/clicker/client
+END
+NamePreferences.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/Android-Project/!svn/ver/97/ClickerClient/src/com/clicker/client/NamePreferences.java
+END
+PushServerWaitingActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/Android-Project/!svn/ver/153/ClickerClient/src/com/clicker/client/PushServerWaitingActivity.java
+END
+ClickPadActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/Android-Project/!svn/ver/97/ClickerClient/src/com/clicker/client/ClickPadActivity.java
+END
+AbstractQuestionActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/Android-Project/!svn/ver/97/ClickerClient/src/com/clicker/client/AbstractQuestionActivity.java
+END
+ClickerConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/Android-Project/!svn/ver/135/ClickerClient/src/com/clicker/client/ClickerConstants.java
+END
+CustomizableQuestion.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/Android-Project/!svn/ver/153/ClickerClient/src/com/clicker/client/CustomizableQuestion.java
+END
+TaskThread.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/Android-Project/!svn/ver/156/ClickerClient/src/com/clicker/client/TaskThread.java
+END
+ClickGestureListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/Android-Project/!svn/ver/97/ClickerClient/src/com/clicker/client/ClickGestureListener.java
+END
+ClickerClient.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/Android-Project/!svn/ver/157/ClickerClient/src/com/clicker/client/ClickerClient.java
+END
+ClickerClientApp.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/Android-Project/!svn/ver/157/ClickerClient/src/com/clicker/client/ClickerClientApp.java
+END

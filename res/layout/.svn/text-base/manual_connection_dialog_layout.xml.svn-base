@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout1" android:layout_height="wrap_content">
+        <LinearLayout android:id="@+id/linearLayout2" android:layout_height="match_parent" android:orientation="vertical" android:layout_width="125dip">
+            <TextView android:id="@+id/textView1" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/manual_connection_ip_string"></TextView>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/linearLayout3" android:layout_height="match_parent" android:orientation="vertical" android:layout_width="match_parent">
+            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/manual_connections_ipfield">
+                <requestFocus></requestFocus>
+            </EditText>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout4" android:layout_height="wrap_content">
+        <LinearLayout android:id="@+id/linearLayout5" android:layout_height="match_parent" android:orientation="vertical" android:layout_width="125dip">
+            <TextView android:id="@+id/textView2" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/manual_connection_port"></TextView>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/linearLayout6" android:layout_height="match_parent" android:orientation="vertical" android:layout_width="match_parent">
+            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/manual_connections_portfield"></EditText>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout7" android:layout_height="wrap_content">
+        <LinearLayout android:id="@+id/linearLayout8" android:layout_height="match_parent" android:orientation="vertical" android:layout_width="125dip">
+            <TextView android:id="@+id/textView3" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/manual_connection_teachername"></TextView>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/linearLayout9" android:layout_height="match_parent" android:orientation="vertical" android:layout_width="match_parent">
+            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/manual_connections_admin_namefield"></EditText>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout10" android:layout_height="wrap_content">
+        <LinearLayout android:id="@+id/linearLayout11" android:layout_height="match_parent" android:orientation="vertical" android:layout_width="125dip">
+            <TextView android:id="@+id/textView4" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/manual_connection_groupname"></TextView>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/linearLayout12" android:layout_height="match_parent" android:orientation="vertical" android:layout_width="match_parent">
+            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/manual_connections_group_namefield"></EditText>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView android:id="@+id/textView5" android:textAppearance="?android:attr/textAppearanceSmall" android:layout_height="wrap_content" android:layout_width="match_parent" android:text="@string/manual_connection_leave_group_blank_label"></TextView>
+    <RelativeLayout android:layout_width="match_parent" android:id="@+id/relativeLayout1" android:layout_height="wrap_content">
+        <LinearLayout android:layout_width="wrap_content" android:layout_centerInParent="true" android:id="@+id/linearLayout13" android:layout_height="wrap_content">
+            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/connect" android:id="@+id/manual_connections_connect_button"></Button>
+            <Button android:layout_width="wrap_content" android:text="@string/cancel" android:layout_height="wrap_content" android:id="@+id/manual_connections_cancel_button"></Button>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

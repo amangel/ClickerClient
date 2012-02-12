@@ -1,0 +1,484 @@
+package com.clicker.client;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Application;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketTimeoutException;
+public class ClickerClientApp extends Application{
+	
+	protected static final String TAG = "SOCKET";
+	protected static final String SEMI_COLON_SEPARATOR = "`/;";
+	protected final int HEARTBEAT_COUNT = 120; //runtask runs every 125 ms. 120*125 = 15000ms
+	
+	protected static final int DISMISS_DIALOG = 10125;
+	
+	private int heartbeatCurrentCount;
+	private boolean waitingForHeartbeatToReturn;
+	private boolean currentlyDisconnected;
+	
+	private Socket pushSocket;
+	private Socket pullSocket;
+	
+	private InetAddress pullServerIp;
+	private int pullServerPort;
+	private TaskThread taskThread;
+	
+	private PrintWriter pushPrintWriter;
+	private ClickerClient clickerClient;
+	private Handler mDialogHandler;
+	private Handler subHandler;
+	private String userName;
+	private String userMAC;
+	private String adminName;
+	private boolean isQuestionPushMode;
+	private boolean questionActive;
+	private Socket activeSocket;
+	private String defaultColor;
+	private String group;
+	private int reconnectAttempts = 5;
+	private int connectTimeout = 5000;
+	private String connectString;
+	private InetAddress pushIp;
+	private int pushPort;
+	private Activity currentActivity;
+	private ProgressDialog dialog;
+	private Thread reconnectionThread;
+	private int disconnectedCount;
+	
+	
+	public ClickerClientApp(){
+		connectString = "";
+		heartbeatCurrentCount = 0;
+		waitingForHeartbeatToReturn = false;
+		currentlyDisconnected = true;
+		pushSocket = new Socket();
+		pullSocket = new Socket();
+		activeSocket = new Socket();
+		createHandler();
+		adminName = "";
+		group = "";
+		defaultColor = "#FF445566";
+		clickerClient = null;
+		subHandler = new Handler();
+		userName = "";
+		isQuestionPushMode = false;
+		questionActive = false;
+		disconnectedCount = 0;
+		//Log.d("SOCKET", "application created");
+	}
+	
+	public void setCurrentActivity(Activity a){
+		currentActivity = a;
+	}
+	
+	public void setConnectString(String s){
+		connectString = s;
+	}
+	
+	public String getConnectString(){
+		return connectString;
+	}
+	
+	public void setCurrentlyDisconnected(boolean bool){
+		currentlyDisconnected = bool;
+	}
+	
+	public boolean getCurrentlyDisconnected(){
+		return currentlyDisconnected;
+	}
+	
+	public String getDefaultColor(){return defaultColor;}
+	
+	public void setDefaultColor(String color){defaultColor = color;}
+	
+	public String getGroup(){return group;}
+	
+	public void setGroup(String gName){group = gName;}
+	
+	public void setQuestionActive(boolean answer){questionActive = answer;}
+	
+	public void setAdminName(String name){adminName = name;}
+	
+	public String getAdminName(){return adminName;}
+	
+	public void setActiveSocket(Socket s){activeSocket = s;}
+	
+	public Socket getActiveSocket(){return activeSocket;}
+	
+	public void setPullServerIP(InetAddress IP){pullServerIp = IP;}
+	
+	public void setPullServerPort(int port){pullServerPort = port;}
+	
+	public void connectToPullServer(){
+		if (getPushSocket()!= null){
+			if(getPushSocket().isConnected()){
+				disconnectServer();
+			}
+		}
+		try {
+			pullSocket = new Socket(pullServerIp, pullServerPort);
+			pullSocket.setSoTimeout(5000);
+		} catch (IOException e) {
+			Log.d(TAG,"Error while connecting to pull server in ccApp");
+			e.printStackTrace();
+		}
+	}
+	
+	public BufferedReader getPullServerBufferedReader(){
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(pullSocket.getInputStream()));
+		} catch (IOException e) {
+			Log.d(TAG, "Error while trying to create buffered reader for pull socket");
+			e.printStackTrace();
+		}
+		return br;
+	}
+	
+	public PrintWriter getPullServerPrintWriter(){
+		PrintWriter pw = null;
+		try{
+			pw = new PrintWriter(pullSocket.getOutputStream(), true);
+		} catch (IOException e) {
+			Log.d(TAG,"Error while trying to create printwriter for pull socket");
+			e.printStackTrace();
+		}
+		return pw;
+	}
+	
+	public void setQuestionInPushMode(boolean flag){isQuestionPushMode = flag;}
+	
+	public boolean isQuestionInPushMode(){return isQuestionPushMode;}
+	
+	public void setUserName(String name){userName = name;}
+	
+	public String getUserName(){return userName;}
+	
+	public void setMACAddress(String MAC){userMAC = MAC;}
+	
+	public String getMACAddress(){return userMAC;}
+	
+	public void closeQuestion(){
+		subHandler.sendEmptyMessage(ClickerConstants.CLOSE_DIALOG);
+	}
+
+	public void setSubHandler(Handler h){subHandler = h;}
+	
+	public Handler getHandler(){return mDialogHandler;}
+	
+	public ClickerClient getClickerClient() {return clickerClient;}
+
+	public void setClickerClient(ClickerClient clickerClient) {this.clickerClient = clickerClient;}
+
+	public void setPushSocket(Socket socket) {pushSocket = socket;}
+	
+	public Socket getPushSocket() {return pushSocket;}
+	
+	public void setPullSocket(Socket socket){pullSocket = socket;}
+	
+	public Socket getPullSocket(){return pullSocket;}
+	
+	public void setPushPrintWriter(PrintWriter pw){pushPrintWriter = pw;}
+	
+	public PrintWriter getPushPrintWriter(){return pushPrintWriter;}
+	
+	public void setTaskThread(TaskThread tt){
+		taskThread = tt;
+		disconnectedCount = 0;
+	}
+	
+	public TaskThread getTaskThread(){return taskThread;}
+	
+	protected void openCustom(String questionNumber, String flags, String parameters, String color){
+    	Intent intent = new Intent(this, CustomizableQuestion.class);
+    	intent.putExtra("questionNumber", questionNumber);
+    	intent.putExtra("flags", flags);
+    	intent.putExtra("values", parameters);
+    	intent.putExtra("color", color);
+    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    	startActivity(intent);	
+	}
+	
+	protected void openMouseControl(String questionNumber, String flags, String parameters, String color){
+		Intent intent = new Intent(this, ClickPadActivity.class);
+    	intent.putExtra("questionNumber", questionNumber);
+    	intent.putExtra("flags", flags);
+    	intent.putExtra("values", parameters);
+    	intent.putExtra("color", color);
+    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    	startActivity(intent);	
+	}
+	
+	public void cancelTimer(){
+		if(isQuestionInPushMode()){
+			try{
+				taskThread.cancelTimer();
+			} catch (NullPointerException e){
+				
+			}
+		}
+	}
+	
+	public void runTask(BufferedReader inr) {
+		try {
+			if(heartbeatCurrentCount == HEARTBEAT_COUNT){
+				if(waitingForHeartbeatToReturn){
+					Toast.makeText(this, "Connection to server lost.", Toast.LENGTH_SHORT).show();
+					Log.d(TAG,"connection lost due to heartbeat");
+					gotDisconnected();
+				}
+				pushPrintWriter.println(ClickerConstants.STILL_CONNECTED_REQUEST);
+				pushPrintWriter.flush();
+				//Log.d(TAG,"sent heartbeat");
+				heartbeatCurrentCount = 0;
+				waitingForHeartbeatToReturn = true;
+			}
+			heartbeatCurrentCount++;
+			//Log.d(TAG,"heartbeatcount: "+heartbeatCurrentCount);
+			String str = inr.readLine();
+			String col = "";
+			if(!currentlyDisconnected){
+				if (str == null) {
+					gotDisconnected();
+				}
+				String[] input = str.split(SEMI_COLON_SEPARATOR);
+				Log.d(TAG, "runTask received message: "+str);
+				
+				if(input.length >= 1){
+					if(input[0].equals(ClickerConstants.OPEN_COMMAND)){
+						if(input.length<5){
+							col="default";
+						}
+						else {
+							col = input[4];
+						}
+						if(questionActive){
+							subHandler.sendEmptyMessage(ClickerConstants.CLOSE_DIALOG);
+						}
+						//Log.d(TAG, "Open requested with: "+str);
+						openCustom(input[1], input[2], input[3], col);
+					} else if(input[0].equals(ClickerConstants.OPEN_CLICKPAD)){
+						if(input.length<5){
+							col="default";
+						}
+						else {
+							col = input[4];
+						}
+						if(questionActive){
+							subHandler.sendEmptyMessage(ClickerConstants.CLOSE_DIALOG);
+						}
+						Log.d(TAG, "Mouse open requested with: "+str);
+						openMouseControl(input[1], input[2], input[3], col);
+					}
+					else if (input[0].equals(ClickerConstants.CLOSE_COMMAND)){
+						subHandler.sendEmptyMessage(ClickerConstants.CLOSE_DIALOG);
+						//Toast.makeText(this, "received close", Toast.LENGTH_SHORT).show();
+					}
+					else if (input[0].equals(ClickerConstants.SYSTEM_COMMAND)){
+						if(input[1].equals(ClickerConstants.REMOVE_OPTION)){
+							Message mess = Message.obtain(subHandler, 
+									ClickerConstants.REMOVE_MC_OPTION, 
+									Integer.parseInt(input[2]), 0); //last 0 to properly
+																//create the message type
+							subHandler.sendMessage(mess);
+						} else if (input[1].equals(ClickerConstants.SET_COLOR)){
+							setDefaultColor(input[2]);
+						} else if (input[1].equals(ClickerConstants.SET_GROUP)){
+							setGroup(input[2]);
+							
+							subHandler.sendEmptyMessage(ClickerConstants.REDRAW);
+							
+						}
+					}
+					else if (input[0].equals(ClickerConstants.INVALID_RESPONSE)){
+						Toast.makeText(this, 
+								"The administrator received an invalid response that it could not process.", 
+								Toast.LENGTH_SHORT).show();
+					}
+					else if (input[0].equals(ClickerConstants.INVALID_ADMIN)){
+						Toast.makeText(this, "You attempted to connect to an invalid Administrator name: "+adminName+"."
+					                        +"\nThe connection was refused.", Toast.LENGTH_SHORT).show();
+						closeConnections();
+					}
+					else if (input[0].equals(ClickerConstants.INVALID_INFORMATION)){
+						Toast.makeText(getClickerClient(), "The admin received an invalid response that it could not process.", Toast.LENGTH_SHORT).show();
+						
+					}
+					else if (input[0].equals(ClickerConstants.STILL_CONNECTED_RESPONSE)){
+						//Log.d(TAG, "Heartbeat response received");
+						waitingForHeartbeatToReturn = false;
+					}
+				} else {
+					Toast.makeText(this, "Client received an invalid command that it could not process:\n"+str, Toast.LENGTH_SHORT).show();
+				}
+			} else {
+				//Log.d(TAG, "Currently disconnected and trying to runtask...");
+			}
+		} catch (SocketTimeoutException e) {
+			//do nothing
+		} catch (IOException e) {
+			Log.d(TAG,"runtask() IO Exception");
+			//e.printStackTrace();
+			gotDisconnected();
+		} catch (Exception e) {
+			Log.d(TAG, "runtask() listen exception: "+ e.getMessage());
+			//e.printStackTrace();
+			gotDisconnected();
+		}
+		
+	}
+	
+	private void gotDisconnected(){
+		if(disconnectedCount == 0){
+			disconnectedCount++;
+			//Toast.makeText(currentActivity, "Attempting to reconnect...", Toast.LENGTH_SHORT).show();
+			cancelTimer();
+			dialog = ProgressDialog.show(currentActivity, "", "Connection interrupted... Reconnecting.", true);
+			if(reconnectionThread != null){
+				reconnectionThread.stop();
+			}
+			reconnectionThread = new Thread(new ReconnectionThread());
+			reconnectionThread.start();
+		}
+	}
+	
+	private class ReconnectionThread implements Runnable{
+
+		@Override
+		public void run() {
+			//Log.d(TAG, "reconnection thread created at: "+System.currentTimeMillis());
+			int currentReconnectAttempts = 0;
+			boolean reconnected = false;
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) { 
+				//e1.printStackTrace();
+			}
+			while(currentReconnectAttempts < reconnectAttempts){
+				//Log.d("SOCKET", "attempting to reconnect");
+				try {
+					Socket s = new Socket();
+					InetSocketAddress isa = new InetSocketAddress(pushIp, pushPort);
+					s.connect(isa, 5000);
+					setPushSocket( s );
+					getPushSocket().setSoTimeout(50);
+					getPushSocket().setKeepAlive(true);
+					
+					OutputStream out = getPushSocket().getOutputStream();
+					PrintWriter outw = new PrintWriter(out, true);
+					setPushPrintWriter( outw );
+					InputStream in = getPushSocket().getInputStream();
+					BufferedReader inr = new BufferedReader(new InputStreamReader(in));
+					
+					outw.println(getConnectString());
+					outw.flush();
+					setTaskThread( new TaskThread(getClickerClient(), getHandler(), inr) );
+					currentReconnectAttempts = reconnectAttempts+1;
+					reconnected = true;
+					resetHeartbeatWaiting();
+					currentlyDisconnected = false;
+					disconnectedCount = 0;
+				} catch (IOException e) {
+					//e.printStackTrace();
+					currentReconnectAttempts++;
+					try {
+						Thread.sleep(250);
+					} catch (InterruptedException e1) {
+						//e1.printStackTrace();
+					}
+					continue;
+				}
+			}
+			
+			mDialogHandler.sendEmptyMessage(DISMISS_DIALOG);
+			if(!reconnected){
+				closeConnections();
+			}
+			//Log.d(TAG, "ending run of reconnection thread, reconnected: "+reconnected);
+		}}
+	
+	private void closeConnections(){
+		disconnectServer();
+		subHandler.sendEmptyMessage(ClickerConstants.CLOSE_PUSH);
+	}
+	
+	public void resetHeartbeatWaiting(){
+		waitingForHeartbeatToReturn = false;
+	}
+	
+	protected void disconnectServer() {
+		try {
+			cancelTimer();
+			closeQuestion();
+			getPushSocket().close();
+			setQuestionInPushMode(false);
+			setActiveSocket(new Socket());
+			currentlyDisconnected = true;
+		} catch (IOException e) {
+			Log.d(TAG, "error closing socket: " + e.getMessage());
+		}
+	}
+	
+	private void createHandler(){
+		mDialogHandler = new Handler() {
+			public void handleMessage(android.os.Message msg) {
+				Message mess;
+				switch (msg.what) {
+				case ClickerConstants.CLOSE_DIALOG: //handler, what, arg1, arg2
+					//mess = Message.obtain(subHandler, ClickerConstants.CLOSE_DIALOG, msg.arg1, msg.arg2);
+					subHandler.sendEmptyMessage(ClickerConstants.CLOSE_DIALOG);
+					break;
+				case ClickerConstants.REMOVE_MC_OPTION: //handler, what, arg1, arg2
+					mess = Message.obtain(subHandler, ClickerConstants.REMOVE_MC_OPTION, msg.arg1, msg.arg2);
+					subHandler.sendMessage(mess);
+					break;
+				case ClickerConstants.RESEND_RESPONSE:
+					break;
+				case ClickerConstants.CONNECT_CHECK:
+					getPushPrintWriter().println("connected");
+					break;
+				case ClickerConstants.CLOSE_CONNECTION:
+					disconnectServer();
+					break;
+//				case ClickerConstants.CLICKPAD_DIALOG_OK:
+//					clickerClient.openClickPad(msg.arg1, msg.arg2);
+//					break;
+				case ClickerConstants.INVALID:
+					Toast.makeText(getClickerClient(), "The admin received an invalid response that it could not process.", Toast.LENGTH_SHORT).show();
+					break;
+				case DISMISS_DIALOG:
+					dialog.dismiss();
+					break;
+				case ClickerConstants.DUP_ID:
+					Toast.makeText(
+							getClickerClient(),
+							"Duplicate ID detected.\nEnter a different name through the menu option to connect.",
+							Toast.LENGTH_SHORT).show();
+				}
+			};
+		};
+	}
+
+	public void setConnectionInfo(InetAddress ip, int port) {
+		pushIp = ip;
+		pushPort = port;
+		
+	}
+}
+

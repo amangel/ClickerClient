@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="match_parent"
+  android:id="@+id/click_pad_relative_layout"
+  android:orientation="vertical">
+			<TextView
+			android:id="@+id/click_pad_instructions"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:text="Single tap to left click\nTwo finger tap to right click\nLong press with one finger to drag" 
+			android:layout_centerHorizontal="true" android:layout_centerInParent="true"/>
+
+  	<Button 
+  		android:layout_height="wrap_content" 
+  		android:layout_alignParentBottom="true"
+  		android:id="@+id/keyboard_click_button" android:layout_width="fill_parent" 
+  		android:text="keyboard" style="?android:attr/buttonStyleSmall" 
+  		android:layout_gravity="bottom"/>
+  		  		<EditText android:id="@+id/etAdvancedText"
+		android:layout_marginTop="-5000dp"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true" android:layout_alignParentRight="true"
+		android:layout_centerHorizontal="true" android:maxHeight="32dp"
+		android:inputType="textMultiLine"
+		android:visibility="visible"
+		/>
+  	
+</RelativeLayout>
